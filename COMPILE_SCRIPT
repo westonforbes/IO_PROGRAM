@@ -1,0 +1,33 @@
+#!/bin/sh
+#The below line actually clears the screen.
+#printf "\033c"
+#The below line clears the screen but retains the data.
+clear
+if [ "$EUID" -ne 0 ]
+  then echo "THIS SCRIPT MUST BE RUN AS ROOT (sudo). EXITING..."
+  exit
+fi
+echo ""
+echo "WESTONS FANCY-PANTSY COMPILE SCRIPT"
+echo ""
+echo "STARTING COMPILATION..."
+echo ""
+gcc IO_PROGRAM_MAIN.c -lncursesw -lwiringPi -o IO_PROGRAM
+EXIT_CODE=$?
+echo "COMPILATION EXITED WITH CODE: $EXIT_CODE"
+echo ""
+if [ $EXIT_CODE != 0 ]
+then
+    echo "COMPILATION FAILURE. EXITING..."
+    echo ""
+    echo ""
+fi
+while [ $EXIT_CODE == "0" ]; do
+    echo "COMPILATION SUCCESS!"
+    read -p "WOULD YOU LIKE TO RUN THE PROGRAM? (Y/N): " YESNO
+    case $YESNO in
+        [Yy]* ) ./IO_PROGRAM; break;;
+        [Nn]* ) exit;;
+        * ) echo "PLEASE ANSWER WITH (Y or y / N or n).";;
+    esac
+done

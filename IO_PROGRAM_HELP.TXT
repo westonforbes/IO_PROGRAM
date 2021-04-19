@@ -1,0 +1,11 @@
+To push these files from a workstation to target (PC to Raspberry Pi)
+In the workstation cmd or powershell:
+    scp -r C:\Users\wforbes\Documents\SOFTWARE\RASPI_IO\IO_PROGRAM_2021_04_15A.d admin@UNIX001:PROGRAMS.d/IO_PROGRAM.d/
+
+The following commands assume you are in the project directory.
+
+To compile this program execute the command
+    sudo bash COMPILE_SCRIPT
+
+To run this program without recompiling
+    ./IO_PROGRAM
