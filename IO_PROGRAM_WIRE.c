@@ -1,7 +1,6 @@
 //DETAILS:
 //Written by Weston Forbes.
 //westonforbes@automaticspring.com, westonforbes@gmail.com
-//Project begin date 2021_04_13. Version control is part of file name. (FILENAME_YYYY_MM_DD{DAILY REV LETTER}.c).
 
 //NOTE ON NAMING CONVENTION:
 //Each method should start with the name of the file its contained in. For example, every method in IO_DEV_DRAW should begin with DRAW.

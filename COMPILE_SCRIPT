@@ -2,7 +2,7 @@
 #The below line actually clears the screen.
 #printf "\033c"
 #The below line clears the screen but retains the data.
-clear
+#clear
 if [ "$EUID" -ne 0 ]
   then echo "THIS SCRIPT MUST BE RUN AS ROOT (sudo). EXITING..."
   exit

@@ -1,13 +1,6 @@
-//Command to copy files to target.
-//scp -r C:\Users\wforbes\Documents\SOFTWARE\RASPI_IO\IO_PROGRAM_2021_04_14B.d admin@UNIX001:PROGRAMS.d/IO_PROG.d/
-
-//Compile and run on target.
-//gcc SOURCE_CODE.d/IO_DEV_MAIN_2021_04_14A.c -lncursesw -lwiringPi -o COMPILED.d/IO_DEV_2021_04_14A ; ./COMPILED.d/IO_DEV_2021_04_14A
-
 //DETAILS:
 //Written by Weston Forbes.
 //westonforbes@automaticspring.com, westonforbes@gmail.com
-//Project begin date 2021_04_13. Version control is part of file name. (FILENAME_YYYY_MM_DD{DAILY REV LETTER}.c).
 
 //NOTE ON NAMING CONVENTION:
 //Each method should start with the name of the file its contained in. For example, every method in IO_DEV_DRAW should begin with DRAW.
@@ -22,11 +15,18 @@
 #include "IO_PROGRAM_DRAW.c"
 #include "IO_PROGRAM_WIRE.c"
 
+#define SLEEP_TIME 10
+
 //Method prototypes.
 /// <summary>
 /// This is the meat and potatoes function.
 /// </summary>
 int MAIN_LOOP(void);
+
+/// <summary>
+/// This method will sleep the thread for a certain period of time.
+/// </summary>
+static void SLEEP_MS(long MILLISECONDS);
 
 /// <summary>
 /// This method returns the time in a standard tm struct.
@@ -54,15 +54,27 @@ int main(){
 }
 
 int MAIN_LOOP(void) {
+
 	DRAW_CYCLE_TIME_WINDOW();
-		WIRE_POLL();
-		DRAW_INPUT_WINDOW(SENSORS, LAST_CHANGE);
-		DRAW_TIME();
-		DRAW_MEMORY();
-		//DRAW_CPU_LOAD();
-	//TODO implement nanosleep routine.
+	WIRE_POLL();
+	DRAW_INPUT_WINDOW(SENSORS, LAST_CHANGE);
+	DRAW_TIME();
+	DRAW_MEMORY();
+	DRAW_CPU_LOAD();
+	SLEEP_MS(SLEEP_TIME);
+
 	//Write all the changes to the screen.
 	refresh();
 	return 0;
+}
+
+static void SLEEP_MS(long MILLISECONDS){
+       struct timespec TS_SLEEP,TS_REMAINING;
+	   //Calculate the nanosecond
+       long REMAINING_MILLISECONDS = (MILLISECONDS) % 1000;
+       long REMAINING_NANOSECONDS = REMAINING_MILLISECONDS * 1000000;
+       TS_SLEEP.tv_sec = (MILLISECONDS) / 1000;
+       TS_SLEEP.tv_nsec = REMAINING_NANOSECONDS;
+       nanosleep(&TS_SLEEP, &TS_REMAINING);
 }
 

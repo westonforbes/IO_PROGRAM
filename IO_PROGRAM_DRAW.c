@@ -1,7 +1,6 @@
 //DETAILS:
 //Written by Weston Forbes.
 //westonforbes@automaticspring.com, westonforbes@gmail.com
-//Project begin date 2021_04_13. Version control is part of file name. (FILENAME_YYYY_MM_DD{DAILY REV LETTER}.c).
 
 //NOTE ON NAMING CONVENTION:
 //Each method should start with the name of the file its contained in. For example, every method in IO_DEV_DRAW should begin with DRAW.
@@ -83,16 +82,30 @@ void DRAW_ABORT_SCREEN(int RETURN_CODE);
 /// <summary>
 /// Method for anything shutdown related.
 /// </summary>
-/// <param name=""></param>
 void DRAW_SHUTDOWN(void);
 
+/// <summary>
+/// This method draws the time box on screen.
+/// </summary>
 void DRAW_TIME(void);
 
+/// <summary>
+/// This method draws the memory box on screen.
+/// </summary>
 void DRAW_MEMORY(void);
 
+/// <summary>
+/// This method draws the CPU LOAD box on screen.
+/// </summary>
 void DRAW_CPU_LOAD(void);
 
-int GetCPULoad(); 
+/// <summary>
+/// This method does the actual lifting of getting CPU load.
+/// </summary>
+/// <returns>
+/// The CPU load as a integer percentage.
+/// </returns>
+int GET_CPU_LOAD(void); 
 
 //Method implementations.
 int DRAW_SETUP(void) {
@@ -399,12 +412,12 @@ void DRAW_MEMORY(void){
 void DRAW_CPU_LOAD(void){
 	//Define parameters.
 	int X_LOCATION = 2; //Location on screen, 0 index position. Position includes border.
-	int Y_LOCATION = 35; //Location on screen, 0 index position. Position includes border.
+	int Y_LOCATION = 22; //Location on screen, 0 index position. Position includes border.
 	int WIDTH = 30; //Box width.
 	int HEIGHT = 4; //Box height.
 
 	//Get the current time.
-	int LOAD = GetCPULoad();
+	int LOAD = GET_CPU_LOAD();
 
 	//Print the current CPU load.
 	mvprintw(Y_LOCATION + 1, X_LOCATION + 4, "CPU LOAD (ALL PROCESSES)");
@@ -414,20 +427,16 @@ void DRAW_CPU_LOAD(void){
 	DRAW_BOX(X_LOCATION, Y_LOCATION, WIDTH, HEIGHT);
 }
 
+int GET_CPU_LOAD(void) {
+	int FILE_HANDLER;
+	char FILE_BUFFER[1024];
+	float LOAD;
 
-int GetCPULoad() {
-/*
-	int FileHandler;
-	char FileBuffer[1024];
-	float load;
-
-	FileHandler = open("/proc/loadavg", O_RDONLY);
-	if(FileHandler < 0) {
+	FILE_HANDLER = open("/proc/loadavg", O_RDONLY);
+	if(FILE_HANDLER < 0) {
 		return -1; }
-	read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
-	sscanf(FileBuffer, "%f", &load);
-	close(FileHandler);
-	return (int)(load * 100);
-	*/
-return 0;
+	read(FILE_HANDLER, FILE_BUFFER, sizeof(FILE_BUFFER) - 1);
+	sscanf(FILE_BUFFER, "%f", &LOAD);
+	close(FILE_HANDLER);
+	return (int)(LOAD * 100);
 }
