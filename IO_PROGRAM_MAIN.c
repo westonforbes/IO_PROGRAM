@@ -59,8 +59,7 @@ int MAIN_LOOP(void) {
 	WIRE_POLL();
 	DRAW_INPUT_WINDOW(SENSORS, LAST_CHANGE);
 	DRAW_TIME();
-	DRAW_MEMORY();
-	DRAW_CPU_LOAD();
+	DRAW_SYS_DATA();
 	SLEEP_MS(SLEEP_TIME);
 
 	//Write all the changes to the screen.

@@ -92,12 +92,7 @@ void DRAW_TIME(void);
 /// <summary>
 /// This method draws the memory box on screen.
 /// </summary>
-void DRAW_MEMORY(void);
-
-/// <summary>
-/// This method draws the CPU LOAD box on screen.
-/// </summary>
-void DRAW_CPU_LOAD(void);
+void DRAW_SYS_DATA(void);
 
 /// <summary>
 /// This method does the actual lifting of getting CPU load.
@@ -390,41 +385,37 @@ void DRAW_TIME(void){
 	DRAW_BOX(X_LOCATION, Y_LOCATION, WIDTH, HEIGHT);
 }
 
-void DRAW_MEMORY(void){
+void DRAW_SYS_DATA(void){
 	//Define parameters.
-	int X_LOCATION = 2; //Location on screen, 0 index position. Position includes border.
-	int Y_LOCATION = 17; //Location on screen, 0 index position. Position includes border.
-	int WIDTH = 30; //Box width.
-	int HEIGHT = 4; //Box height.
+	int X_LOCATION_MEM = 2; //Location on screen, 0 index position. Position includes border.
+	int Y_LOCATION_MEM = 17; //Location on screen, 0 index position. Position includes border.
+	int WIDTH_MEM = 30; //Box width.
+	int HEIGHT_MEM = 4; //Box height.
 
-	//Get the current memory usage.
-	struct rusage r_usage;
-	getrusage(RUSAGE_SELF,&r_usage);
-	
-	//Print the current memory usage.
-	mvprintw(Y_LOCATION + 1, X_LOCATION + 4, "CURRENT RAM UTILIZATION");
-	mvprintw(Y_LOCATION + 2, X_LOCATION + 6, "%ld KILOBYTES",r_usage.ru_maxrss);
+	int X_LOCATION_CPU_ALL = 2; //Location on screen, 0 index position. Position includes border.
+	int Y_LOCATION_CPU_ALL = 22; //Location on screen, 0 index position. Position includes border.
+	int WIDTH_CPU_ALL = 30; //Box width.
+	int HEIGHT_CPU_ALL = 4; //Box height.
 
-	//Create the box.
-	DRAW_BOX(X_LOCATION, Y_LOCATION, WIDTH, HEIGHT);
-}
-
-void DRAW_CPU_LOAD(void){
-	//Define parameters.
-	int X_LOCATION = 2; //Location on screen, 0 index position. Position includes border.
-	int Y_LOCATION = 22; //Location on screen, 0 index position. Position includes border.
-	int WIDTH = 30; //Box width.
-	int HEIGHT = 4; //Box height.
-
-	//Get the current time.
+	//Get the current cpu average usage.
 	int LOAD = GET_CPU_LOAD();
 
+	//Get the current memory usage.
+	struct rusage USAGE;
+	getrusage(RUSAGE_SELF,&USAGE);
+	
+	//Print the current memory usage.
+	mvprintw(Y_LOCATION_MEM + 1, X_LOCATION_MEM + 4, "CURRENT RAM UTILIZATION");
+	mvprintw(Y_LOCATION_MEM + 2, X_LOCATION_MEM + 6, "%ld KILOBYTES",USAGE.ru_maxrss);
+
 	//Print the current CPU load.
-	mvprintw(Y_LOCATION + 1, X_LOCATION + 4, "CPU LOAD (ALL PROCESSES)");
-	mvprintw(Y_LOCATION + 2, X_LOCATION + 6, "%d PERCENT",LOAD);
+	mvprintw(Y_LOCATION_CPU_ALL + 1, X_LOCATION_CPU_ALL + 4, "CPU LOAD (ALL PROCESSES)");
+	mvprintw(Y_LOCATION_CPU_ALL + 2, X_LOCATION_CPU_ALL + 6, "%d PERCENT",LOAD);
 
 	//Create the box.
-	DRAW_BOX(X_LOCATION, Y_LOCATION, WIDTH, HEIGHT);
+	DRAW_BOX(X_LOCATION_MEM, Y_LOCATION_MEM, WIDTH_MEM, HEIGHT_MEM);
+	DRAW_BOX(X_LOCATION_CPU_ALL, Y_LOCATION_CPU_ALL, WIDTH_CPU_ALL, HEIGHT_CPU_ALL);
+
 }
 
 int GET_CPU_LOAD(void) {
@@ -440,3 +431,4 @@ int GET_CPU_LOAD(void) {
 	close(FILE_HANDLER);
 	return (int)(LOAD * 100);
 }
+
